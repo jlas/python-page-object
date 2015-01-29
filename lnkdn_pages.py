@@ -5,7 +5,7 @@ class LoginPage(AbstractBasePage):
     def __init__(self, webdriver):
         super(LoginPage, self).__init__(webdriver, 'https://www.linkedin.com/uas/login')
 
-    def signIn(self, username, password):
+    def signIn(self, email, password):
         emailEl = self._id('session_key-login')
         emailEl.send_keys(email)
         passwordEl = self._id('session_password-login')

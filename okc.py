@@ -2,7 +2,7 @@
 
 from selenium import webdriver
 
-from pages import LoginPage
+from okc_pages import LoginPage
 
 lp = LoginPage(webdriver.Firefox())
 hp = lp._open().signIn('username', 'password')
