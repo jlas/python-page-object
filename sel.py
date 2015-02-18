@@ -43,9 +43,9 @@ class ElementFinder(object):
         self.ignoreError = ignoreError
 
     def _handleErrors(func):
-        def wrapped(*args, **kwargs):
+        def wrapped(self, *args, **kwargs):
             try:
-                return func(*args, **kwargs)
+                return func(self, *args, **kwargs)
             except:
                 if not self.ignoreError:
                     raise
