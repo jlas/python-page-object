@@ -68,6 +68,18 @@ class ElementFinder(object):
 
 class ElementWrapper(ElementFinder):
 
+    def __init__(self, webdriver, element=None, ignoreError=True):
+        super(ElementWrapper, self).__init__(webdriver, element)
+        self.ignoreError = ignoreError
+
+    def click(self):
+        try:
+            self.element.click()
+        except:
+            if not self.ignoreError:
+                raise
+            print 'Error on click'
+
     def __getattr__(self, name):
         return getattr(self.element, name)
 
@@ -99,7 +111,12 @@ window.scrollTo(0, Math.max(
         return self
 
     def _isOpen(self):
-        return (self.webdriver.title == self.pageTitle)
+        if (self.pageTitle):
+            return (self.webdriver.title == self.pageTitle)
+        else:
+            # No title provided, so just sleep and hope the page is loaded
+            sleep(1)
+            return True
 
     def _waitUntilOpen(self):
         while not self._isOpen():
