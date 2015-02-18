@@ -1,3 +1,4 @@
+from time import sleep
 from functools import partial
 
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
@@ -72,10 +73,14 @@ class ElementWrapper(ElementFinder):
 
 class AbstractBasePage(ElementFinder):
 
-    def __init__(self, webdriver, baseUrl="http://www.example.com"):
+    def __init__(self, webdriver, baseUrl="http://www.example.com", pageTitle=""):
         super(AbstractBasePage, self).__init__(webdriver)
         self.baseWin = webdriver.current_window_handle
         self.baseUrl = baseUrl
+        self.pageTitle = pageTitle
+
+    def _refresh(self):
+        self.webdriver.refresh()
 
     def _scrollDown(self):
         self.webdriver.execute_script(
@@ -90,3 +95,10 @@ window.scrollTo(0, Math.max(
     def _open(self):
         self.webdriver.get(self.baseUrl)
         return self
+
+    def _isOpen(self):
+        return (self.webdriver.title == self.pageTitle)
+
+    def _waitUntilOpen(self):
+        while not self._isOpen():
+            sleep(0.1)
