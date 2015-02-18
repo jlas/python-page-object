@@ -37,8 +37,15 @@ class PeoplePage(AbstractBasePage):
         prevTitles = []
 
         while True:
-            connectBtns = self._mCss('[data-act="request"]')
-            for btn in connectBtns:
+            profileCards = self._mClass('card-wrapper')
+
+            for profileCard in profileCards:
+
+                # Open the profile in a new tab
+                link = profileCard._tag('a')
+                self._tmpOpen(link)
+
+                btn = profileCard._css('[data-act="request"]')
                 title = btn.get_attribute('title')
 
                 # Same person? Probably asking for email at this point

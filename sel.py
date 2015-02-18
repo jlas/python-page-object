@@ -3,6 +3,7 @@ from functools import partial
 
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.wait import WebDriverWait
 
 def _lookup(multi, by, webdriver, byVal, wait=1, element=None):
@@ -81,6 +82,7 @@ class AbstractBasePage(ElementFinder):
 
     def _refresh(self):
         self.webdriver.refresh()
+        self._waitUntilOpen()
 
     def _scrollDown(self):
         self.webdriver.execute_script(
@@ -102,3 +104,13 @@ window.scrollTo(0, Math.max(
     def _waitUntilOpen(self):
         while not self._isOpen():
             sleep(0.1)
+
+    def _tmpOpen(self, el, wait=0.2):
+        """Open link in new window, then close."""
+        el.send_keys(Keys.SHIFT+Keys.RETURN)
+        sleep(wait)
+        for windowHandle in self.webdriver.window_handles:
+            if windowHandle != self.baseWin:
+                self.webdriver.switch_to_window(windowHandle)
+                self.webdriver.close()
+        self.webdriver.switch_to_window(self.baseWin)
