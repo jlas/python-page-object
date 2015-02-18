@@ -37,31 +37,50 @@ _mLookupCss = partial(_lookup, True, By.CSS_SELECTOR)
 
 class ElementFinder(object):
 
-    def __init__(self, webdriver, element=None):
+    def __init__(self, webdriver, element=None, ignoreError=True):
         self.webdriver = webdriver
         self.element = element
+        self.ignoreError = ignoreError
 
+    def _handleErrors(func):
+        def wrapped(*args, **kwargs):
+            try:
+                return func(*args, **kwargs)
+            except:
+                if not self.ignoreError:
+                    raise
+                print 'Error ignored'
+        return wrapped
+
+    @_handleErrors
     def _id(self, _id, wait=1):
         return _lookupId(self.webdriver, _id, wait, self.element)
 
+    @_handleErrors
     def _class(self, _class, wait=1):
         return _lookupClass(self.webdriver, _class, wait, self.element)
 
+    @_handleErrors
     def _tag(self, _tag, wait=1):
         return _lookupTag(self.webdriver, _tag, wait, self.element)
 
+    @_handleErrors
     def _css(self, _css, wait=1):
         return _lookupCss(self.webdriver, _css, wait, self.element)
 
+    @_handleErrors
     def _mId(self, _id, wait=1):
         return _mLookupId(self.webdriver, _id, wait, self.element)
 
+    @_handleErrors
     def _mTag(self, _tag, wait=1):
         return _mLookupTag(self.webdriver, _tag, wait, self.element)
 
+    @_handleErrors
     def _mClass(self, _class, wait=1):
         return _mLookupClass(self.webdriver, _class, wait, self.element)
 
+    @_handleErrors
     def _mCss(self, _css, wait=1):
         return _mLookupCss(self.webdriver, _css, wait, self.element)
 
@@ -69,8 +88,7 @@ class ElementFinder(object):
 class ElementWrapper(ElementFinder):
 
     def __init__(self, webdriver, element=None, ignoreError=True):
-        super(ElementWrapper, self).__init__(webdriver, element)
-        self.ignoreError = ignoreError
+        super(ElementWrapper, self).__init__(webdriver, element, ignoreError)
 
     def click(self):
         try:
