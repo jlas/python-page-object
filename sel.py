@@ -126,6 +126,7 @@ window.scrollTo(0, Math.max(
 
     def _open(self):
         self.webdriver.get(self.baseUrl)
+        self._waitUntilOpen()
         return self
 
     def _isOpen(self):

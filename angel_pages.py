@@ -54,10 +54,14 @@ class RecruitingPage(AbstractBasePage):
         prevTitles = []
 
         while count < 50:
-            btns = self._mClass('interested-button')
-            for btn in btns:
+            for row in self._mClass('browse_candidates_table_row')[:5]:
+                action_bar = row._class('action-bar')
+                btn = row._class('interested-button')
+                if action_bar and not action_bar.is_displayed():
+                    row.click()
+                    sleep(1)
                 print count
                 btn.click()
                 count += 1
-
                 sleep(randint(3,5))
+            self._refresh()
